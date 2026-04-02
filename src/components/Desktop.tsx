@@ -7,6 +7,7 @@ import Window from "./Window";
 import IntroView from "./IntroView";
 import IntroForm from "./IntroForm";
 import BrowserWindow from "./BrowserWindow";
+import AsciiBackground from "./AsciiBackground";
 import Taskbar from "./Taskbar";
 import styles from "./Desktop.module.css";
 
@@ -145,6 +146,7 @@ export default function Desktop({ initialIntros }: DesktopProps) {
 
   return (
     <>
+      <AsciiBackground />
       <div className={styles.desktop}>
         <div className={styles.iconGrid}>
           {intros.map((intro) => (
