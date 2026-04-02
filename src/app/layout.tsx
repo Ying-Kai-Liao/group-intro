@@ -11,7 +11,7 @@ const pixelFont = Press_Start_2P({
 export const metadata: Metadata = {
   title: "UTS Hackathon — Group Intro",
   description: "A pixel-art desktop where hackathon members introduce themselves",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
 };
 
 export default function RootLayout({
