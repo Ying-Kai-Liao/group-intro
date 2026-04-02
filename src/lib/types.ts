@@ -18,6 +18,8 @@ export interface IntroInput {
   links?: { label: string; url: string }[];
   freeform?: string | null;
   color?: string | null;
+  email?: string | null;
+  password?: string | null;
 }
 
 export interface LinkItem {

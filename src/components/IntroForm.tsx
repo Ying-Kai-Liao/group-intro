@@ -9,16 +9,26 @@ import styles from "./IntroForm.module.css";
 
 interface IntroFormProps {
   onSubmit: (intro: Intro) => void;
+  editIntro?: Intro;
+  editAuth?: { email: string; password: string };
 }
 
-export default function IntroForm({ onSubmit }: IntroFormProps) {
-  const [name, setName] = useState("");
-  const [icon, setIcon] = useState("folder");
-  const [avatar, setAvatar] = useState<string | null>(null);
-  const [bio, setBio] = useState("");
-  const [links, setLinks] = useState<{ label: string; url: string }[]>([]);
-  const [freeform, setFreeform] = useState("");
-  const [color, setColor] = useState(DEFAULT_COLOR);
+export default function IntroForm({ onSubmit, editIntro, editAuth }: IntroFormProps) {
+  const isEditMode = !!(editIntro && editAuth);
+
+  const parsedLinks = editIntro?.links
+    ? (JSON.parse(editIntro.links) as { label: string; url: string }[])
+    : [];
+
+  const [name, setName] = useState(editIntro?.name ?? "");
+  const [icon, setIcon] = useState(editIntro?.icon ?? "folder");
+  const [avatar, setAvatar] = useState<string | null>(editIntro?.avatar ?? null);
+  const [bio, setBio] = useState(editIntro?.bio ?? "");
+  const [links, setLinks] = useState<{ label: string; url: string }[]>(parsedLinks);
+  const [freeform, setFreeform] = useState(editIntro?.freeform ?? "");
+  const [color, setColor] = useState(editIntro?.color ?? DEFAULT_COLOR);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,16 +74,38 @@ export default function IntroForm({ onSubmit }: IntroFormProps) {
       color,
     };
 
+    if (!isEditMode) {
+      // Only include email/password on create
+      if (email.trim()) {
+        payload.email = email.trim();
+        payload.password = password;
+      }
+    }
+
     try {
-      const res = await fetch("/api/intros", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      let res: Response;
+
+      if (isEditMode) {
+        res = await fetch(`/api/intros/${editIntro.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...payload,
+            email: editAuth.email,
+            password: editAuth.password,
+          }),
+        });
+      } else {
+        res = await fetch("/api/intros", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+      }
 
       if (!res.ok) {
         const data = await res.json();
-        setError(data.errors?.[0]?.message || "Something went wrong");
+        setError(data.errors?.[0]?.message || data.error || "Something went wrong");
         return;
       }
 
@@ -170,10 +202,42 @@ export default function IntroForm({ onSubmit }: IntroFormProps) {
         <ColorPicker value={color} onChange={setColor} />
       </div>
 
+      {!isEditMode && (
+        <div className={styles.authSection}>
+          <p className={styles.authHint}>
+            Set email + password to edit or delete your intro later (optional)
+          </p>
+          <div className={styles.field}>
+            <label className={styles.label}>Email</label>
+            <input
+              className={styles.input}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              maxLength={100}
+              placeholder="you@example.com"
+              autoComplete="email"
+            />
+          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Password</label>
+            <input
+              className={styles.input}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              maxLength={100}
+              placeholder="Min 4 characters"
+              autoComplete="new-password"
+            />
+          </div>
+        </div>
+      )}
+
       {error && <p className={styles.error}>{error}</p>}
 
       <button type="submit" className={styles.submitButton} disabled={submitting || !name.trim()}>
-        {submitting ? "Saving..." : "Submit"}
+        {submitting ? "Saving..." : isEditMode ? "Save Changes" : "Submit"}
       </button>
     </form>
   );

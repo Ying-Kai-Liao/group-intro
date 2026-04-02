@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import db, { initDb, rowToIntro } from "@/lib/db";
+import db, { initDb, rowToIntro, hashPassword } from "@/lib/db";
 import { validateIntroInput } from "@/lib/validation";
 
 let initialized = false;
@@ -34,10 +34,11 @@ export async function POST(request: NextRequest) {
   }
 
   const linksJson = data.links ? JSON.stringify(data.links) : null;
+  const passwordHash = data.password ? await hashPassword(data.password) : null;
 
   const result = await db.execute({
-    sql: `INSERT INTO intros (name, icon, avatar, bio, links, freeform, color)
-          VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    sql: `INSERT INTO intros (name, icon, avatar, bio, links, freeform, color, email, password_hash)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     args: [
       data.name,
       data.icon || "folder",
@@ -46,6 +47,8 @@ export async function POST(request: NextRequest) {
       linksJson,
       data.freeform || null,
       data.color || null,
+      data.email || null,
+      passwordHash,
     ],
   });
 

@@ -78,6 +78,35 @@ export function validateIntroInput(input: unknown): {
     }
   }
 
+  // Email: optional, but if provided must be valid format, max 100 chars
+  const hasEmail = body.email !== undefined && body.email !== null && body.email !== "";
+  const hasPassword = body.password !== undefined && body.password !== null && body.password !== "";
+
+  if (hasEmail) {
+    if (typeof body.email !== "string" || body.email.length > 100) {
+      errors.push({ field: "email", message: "Email must be 100 characters or less" });
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+      errors.push({ field: "email", message: "Email must be a valid email address" });
+    }
+  }
+
+  // Password: optional, but if provided must be 4+ chars, max 100 chars
+  if (hasPassword) {
+    if (typeof body.password !== "string" || body.password.length < 4) {
+      errors.push({ field: "password", message: "Password must be at least 4 characters" });
+    } else if (body.password.length > 100) {
+      errors.push({ field: "password", message: "Password must be 100 characters or less" });
+    }
+  }
+
+  // Email and password must be provided together
+  if (hasEmail && !hasPassword) {
+    errors.push({ field: "password", message: "Password is required when email is provided" });
+  }
+  if (hasPassword && !hasEmail) {
+    errors.push({ field: "email", message: "Email is required when password is provided" });
+  }
+
   if (errors.length > 0) {
     return { data: null, errors };
   }
@@ -91,6 +120,8 @@ export function validateIntroInput(input: unknown): {
       links: body.links as { label: string; url: string }[] | undefined,
       freeform: (body.freeform as string) || null,
       color: (body.color as string) || null,
+      email: hasEmail ? (body.email as string) : null,
+      password: hasPassword ? (body.password as string) : null,
     },
     errors: [],
   };

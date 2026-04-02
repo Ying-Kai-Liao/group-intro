@@ -17,6 +17,8 @@ export async function initDb() {
       links TEXT,
       freeform TEXT,
       color TEXT,
+      email TEXT,
+      password_hash TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
@@ -34,6 +36,15 @@ export function rowToIntro(row: Record<string, unknown>): Intro {
     color: (row.color as string) || null,
     created_at: row.created_at as string,
   };
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export default db;

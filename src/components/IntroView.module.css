@@ -54,3 +54,130 @@
   border-top: 2px solid var(--color-border-dark);
   padding-top: 10px;
 }
+
+.actions {
+  display: flex;
+  gap: 6px;
+  border-top: 2px solid var(--color-border-dark);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.actionButton {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: var(--color-surface-light);
+  color: var(--color-text);
+  border: 2px solid var(--color-border-light);
+  border-right-color: var(--color-border-dark);
+  border-bottom-color: var(--color-border-dark);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.actionButton:hover {
+  background: var(--color-border-light);
+}
+
+.actionButton:active {
+  border-color: var(--color-border-dark);
+  border-right-color: var(--color-border-light);
+  border-bottom-color: var(--color-border-light);
+}
+
+.actionButtonDanger {
+  color: var(--accent-coral);
+}
+
+.authPrompt {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 2px solid var(--color-border-dark);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.authPromptLabel {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-text-muted);
+}
+
+.authInput {
+  font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+  font-size: 12px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 2px solid var(--color-border-dark);
+  border-right-color: var(--color-border-light);
+  border-bottom-color: var(--color-border-light);
+  padding: 6px 8px;
+  outline: none;
+}
+
+.authInput:focus {
+  border-color: var(--accent-sky);
+}
+
+.authError {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--accent-coral);
+}
+
+.authButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.authConfirm {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: var(--color-surface-light);
+  color: var(--color-text);
+  border: 2px solid var(--color-border-light);
+  border-right-color: var(--color-border-dark);
+  border-bottom-color: var(--color-border-dark);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.authConfirm:hover {
+  background: var(--color-border-light);
+}
+
+.authConfirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.authCancel {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: none;
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border-dark);
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.authCancel:hover {
+  color: var(--color-text);
+}
+
+.cancelButton {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: none;
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-border-dark);
+  padding: 4px 10px;
+  cursor: pointer;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.cancelButton:hover {
+  color: var(--color-text);
+}

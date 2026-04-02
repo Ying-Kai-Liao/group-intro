@@ -121,3 +121,19 @@
   font-size: 8px;
   color: var(--accent-coral);
 }
+
+.authSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 2px solid var(--color-border-dark);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.authHint {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}

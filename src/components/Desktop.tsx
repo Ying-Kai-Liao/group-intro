@@ -127,6 +127,22 @@ export default function Desktop({ initialIntros }: DesktopProps) {
     closeWindow("form");
   }, [closeWindow]);
 
+  const handleDeleteIntro = useCallback((id: number) => {
+    setIntros((prev) => prev.filter((intro) => intro.id !== id));
+    closeWindow(`intro-${id}`);
+  }, [closeWindow]);
+
+  const handleUpdateIntro = useCallback((updated: Intro) => {
+    setIntros((prev) =>
+      prev.map((intro) => (intro.id === updated.id ? updated : intro))
+    );
+    setWindows((prev) =>
+      prev.map((w) =>
+        w.id === `intro-${updated.id}` ? { ...w, intro: updated } : w
+      )
+    );
+  }, []);
+
   return (
     <>
       <div className={styles.desktop}>
@@ -154,7 +170,12 @@ export default function Desktop({ initialIntros }: DesktopProps) {
                 initialX={win.x}
                 initialY={win.y}
               >
-                <IntroView intro={win.intro} onOpenLink={openBrowserWindow} />
+                <IntroView
+                  intro={win.intro}
+                  onOpenLink={openBrowserWindow}
+                  onDelete={handleDeleteIntro}
+                  onUpdate={handleUpdateIntro}
+                />
               </Window>
             );
           }
