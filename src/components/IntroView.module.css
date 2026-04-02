@@ -1,0 +1,56 @@
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  image-rendering: pixelated;
+  border: 2px solid var(--color-border-light);
+}
+
+.name {
+  font-family: var(--font-pixel);
+  font-size: 14px;
+}
+
+.bio {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.link {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-text);
+  background: var(--color-surface-light);
+  border: 2px solid var(--color-border-light);
+  border-right-color: var(--color-border-dark);
+  border-bottom-color: var(--color-border-dark);
+  padding: 4px 8px;
+  text-decoration: none;
+}
+
+.link:hover {
+  background: var(--color-border-light);
+}
+
+.freeform {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  white-space: pre-wrap;
+  border-top: 2px solid var(--color-border-dark);
+  padding-top: 10px;
+}
