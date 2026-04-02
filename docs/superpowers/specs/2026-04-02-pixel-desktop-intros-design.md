@@ -19,7 +19,7 @@ A web app styled as a custom pixel-art fantasy OS desktop. Friends/small group m
 | Styling | CSS (custom pixel design system) |
 | Font | "Press Start 2P" (Google Fonts) |
 | Deployment | Vercel |
-| Avatar storage | Base64 in DB (small scale) or Vercel Blob |
+| Avatar storage | Base64 in DB (images must be under 200KB before encoding; rejected at API layer if over limit) |
 
 ## Data Model
 
@@ -31,16 +31,16 @@ Single `intros` table:
 | `name` | TEXT | Yes | Display name |
 | `icon` | TEXT | No | Preset pixel icon identifier, defaults to "folder" |
 | `avatar` | TEXT | No | Base64 encoded image or preset identifier |
-| `bio` | TEXT | No | Short text, ~280 chars |
-| `links` | TEXT | No | JSON string — array of `{label, url}` |
-| `freeform` | TEXT | No | Plain text or basic markdown |
+| `bio` | TEXT | No | Max 280 chars, enforced server-side |
+| `links` | TEXT | No | JSON string — array of `{label, url}`, max 5 links, label ≤ 50 chars, URL ≤ 500 chars |
+| `freeform` | TEXT | No | Plain text (no markdown rendering), max 2000 chars |
 | `color` | TEXT | No | Accent color hex for window title bar |
 | `created_at` | DATETIME | Yes | Auto-set on insert |
 
 ## API Routes
 
 - `GET /api/intros` — returns all intros as JSON array
-- `POST /api/intros` — creates a new intro. Validates: name required, sanitizes inputs. Returns the created intro.
+- `POST /api/intros` — creates a new intro. Returns the created intro. Validation: name required (≤ 50 chars), bio ≤ 280 chars, freeform ≤ 2000 chars, max 5 links (label ≤ 50, URL ≤ 500), avatar base64 ≤ 270KB. Sanitize all text inputs.
 
 ## Desktop Experience
 
@@ -48,7 +48,7 @@ Single `intros` table:
 
 - Full-screen pixel-art desktop
 - Pixel wallpaper background (starfield, gradient dither, or tiled pixel pattern)
-- Desktop icons arranged in a grid (left-to-right, top-to-bottom, auto-wrapping)
+- Desktop icons arranged in a grid (left-to-right, top-to-bottom, auto-wrapping). If icons overflow the viewport, the desktop area scrolls vertically.
 - Taskbar fixed at bottom
 
 ### Taskbar
@@ -74,7 +74,7 @@ Single `intros` table:
 - Drop shadow (2-4px offset, pixel-aligned)
 - Draggable by title bar
 - Multiple windows can be open simultaneously
-- Click a window to bring it to front (z-index stacking)
+- Click a window to bring it to front (z-index managed by a shared incrementing counter starting at 10; each focus or open increments and assigns)
 - Fixed size (not resizable in MVP)
 
 ### Window Content (Intro View)
@@ -90,7 +90,7 @@ Single `intros` table:
 - Opens as a pixel-art window on the desktop (not a separate page)
 - Fields: name (text input), icon picker (grid of pixel presets), avatar (upload or preset), bio (textarea), links (add/remove label+url pairs), freeform (textarea), accent color (palette of ~8-10 colors)
 - Submit button saves via POST /api/intros
-- New icon appears on desktop immediately after submission
+- After a successful POST, append the returned intro record to client-side state — no full refetch needed
 
 ## Pixel Design System
 
