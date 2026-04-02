@@ -19,6 +19,7 @@
   padding: 6px 8px;
   cursor: grab;
   user-select: none;
+  touch-action: none;
 }
 
 .titleBar:active {
@@ -60,4 +61,42 @@
   padding: 12px;
   overflow-y: auto;
   max-height: 400px;
+}
+
+/* Mobile: full-width windows, stacked from top */
+@media (max-width: 600px) {
+  .window {
+    position: fixed;
+    width: 100vw;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 44px;
+    min-height: unset;
+    height: calc(100vh - 44px);
+    border: none;
+    border-bottom: 4px solid var(--color-border-light);
+    box-shadow: none;
+  }
+
+  .titleBar {
+    cursor: default;
+    padding: 10px 12px;
+  }
+
+  .titleText {
+    font-size: 11px;
+  }
+
+  .closeButton {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+
+  .content {
+    max-height: unset;
+    flex: 1;
+    padding: 14px;
+    -webkit-overflow-scrolling: touch;
+  }
 }

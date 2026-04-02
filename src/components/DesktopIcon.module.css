@@ -32,3 +32,20 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+@media (max-width: 600px) {
+  .icon {
+    width: 72px;
+    padding: 6px 2px;
+  }
+
+  .iconImage {
+    width: 40px;
+    height: 40px;
+  }
+
+  .label {
+    font-size: 7px;
+    max-width: 68px;
+  }
+}

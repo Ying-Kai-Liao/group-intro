@@ -52,3 +52,18 @@
   border-right-color: var(--color-border-light);
   border-bottom-color: var(--color-border-light);
 }
+
+@media (max-width: 600px) {
+  .taskbar {
+    height: 44px;
+    padding: 0 8px;
+  }
+
+  .logo {
+    font-size: 8px;
+  }
+
+  .newButton {
+    padding: 6px 12px;
+  }
+}

@@ -19,3 +19,16 @@
   position: relative;
   z-index: 1;
 }
+
+@media (max-width: 600px) {
+  .desktop {
+    padding-bottom: 52px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .iconGrid {
+    gap: 4px;
+    padding: 10px;
+    justify-content: flex-start;
+  }
+}

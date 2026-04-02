@@ -28,12 +28,12 @@ export default function Window({
   const [position, setPosition] = useState({ x: initialX, y: initialY });
   const dragRef = useRef<{ startX: number; startY: number; offsetX: number; offsetY: number } | null>(null);
 
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent) => {
+  const startDrag = useCallback(
+    (clientX: number, clientY: number) => {
       onFocus();
       dragRef.current = {
-        startX: e.clientX,
-        startY: e.clientY,
+        startX: clientX,
+        startY: clientY,
         offsetX: position.x,
         offsetY: position.y,
       };
@@ -41,26 +41,47 @@ export default function Window({
     [onFocus, position]
   );
 
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => startDrag(e.clientX, e.clientY),
+    [startDrag]
+  );
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      const touch = e.touches[0];
+      startDrag(touch.clientX, touch.clientY);
+    },
+    [startDrag]
+  );
+
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMove = (clientX: number, clientY: number) => {
       if (!dragRef.current) return;
-      const dx = e.clientX - dragRef.current.startX;
-      const dy = e.clientY - dragRef.current.startY;
+      const dx = clientX - dragRef.current.startX;
+      const dy = clientY - dragRef.current.startY;
       setPosition({
         x: dragRef.current.offsetX + dx,
         y: dragRef.current.offsetY + dy,
       });
     };
 
-    const handleMouseUp = () => {
-      dragRef.current = null;
+    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!dragRef.current) return;
+      e.preventDefault();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
     };
+    const handleEnd = () => { dragRef.current = null; };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mouseup", handleEnd);
+    window.addEventListener("touchmove", handleTouchMove, { passive: false });
+    window.addEventListener("touchend", handleEnd);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mouseup", handleEnd);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleEnd);
     };
   }, []);
 
@@ -70,11 +91,13 @@ export default function Window({
       className={styles.window}
       style={{ left: position.x, top: position.y, zIndex }}
       onMouseDown={onFocus}
+      onTouchStart={onFocus}
     >
       <div
         className={styles.titleBar}
         style={{ background: accentColor }}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <span className={styles.titleText}>{title}</span>
         <button className={styles.closeButton} onClick={onClose}>

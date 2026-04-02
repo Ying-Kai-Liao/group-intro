@@ -38,4 +38,5 @@ html, body {
   background: var(--color-bg);
   color: var(--color-text);
   image-rendering: pixelated;
+  -webkit-text-size-adjust: 100%;
 }
