@@ -9,8 +9,8 @@ const pixelFont = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
-  title: "PixelDesk — Group Intro",
-  description: "A pixel-art desktop where friends introduce themselves",
+  title: "UTS Hackathon — Group Intro",
+  description: "A pixel-art desktop where hackathon members introduce themselves",
 };
 
 export default function RootLayout({

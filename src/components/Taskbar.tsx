@@ -24,7 +24,7 @@ export default function Taskbar({ onNewClick }: TaskbarProps) {
 
   return (
     <div className={styles.taskbar}>
-      <span className={styles.logo}>PixelDesk</span>
+      <span className={styles.logo}>UTS Hackathon</span>
       <div className={styles.right}>
         <button className={styles.newButton} onClick={onNewClick}>
           + New
