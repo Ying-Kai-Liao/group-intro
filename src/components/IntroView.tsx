@@ -1,11 +1,14 @@
+"use client";
+
 import type { Intro, LinkItem } from "@/lib/types";
 import styles from "./IntroView.module.css";
 
 interface IntroViewProps {
   intro: Intro;
+  onOpenLink?: (url: string, label: string) => void;
 }
 
-export default function IntroView({ intro }: IntroViewProps) {
+export default function IntroView({ intro, onOpenLink }: IntroViewProps) {
   const links: LinkItem[] = intro.links ? JSON.parse(intro.links) : [];
 
   return (
@@ -18,15 +21,13 @@ export default function IntroView({ intro }: IntroViewProps) {
       {links.length > 0 && (
         <div className={styles.links}>
           {links.map((link, i) => (
-            <a
+            <button
               key={i}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
               className={styles.link}
+              onClick={() => onOpenLink?.(link.url, link.label)}
             >
               {link.label}
-            </a>
+            </button>
           ))}
         </div>
       )}

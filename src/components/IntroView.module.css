@@ -38,7 +38,7 @@
   border-right-color: var(--color-border-dark);
   border-bottom-color: var(--color-border-dark);
   padding: 4px 8px;
-  text-decoration: none;
+  cursor: pointer;
 }
 
 .link:hover {

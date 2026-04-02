@@ -6,13 +6,16 @@ import DesktopIcon from "./DesktopIcon";
 import Window from "./Window";
 import IntroView from "./IntroView";
 import IntroForm from "./IntroForm";
+import BrowserWindow from "./BrowserWindow";
 import Taskbar from "./Taskbar";
 import styles from "./Desktop.module.css";
 
 interface OpenWindow {
   id: string;
-  type: "intro" | "form";
+  type: "intro" | "form" | "browser";
   intro?: Intro;
+  browserUrl?: string;
+  browserLabel?: string;
   zIndex: number;
   x: number;
   y: number;
@@ -85,6 +88,30 @@ export default function Desktop({ initialIntros }: DesktopProps) {
     ]);
   }, [windows]);
 
+  const openBrowserWindow = useCallback((url: string, label: string) => {
+    const windowId = `browser-${url}`;
+    const existing = windows.find((w) => w.id === windowId);
+    if (existing) {
+      setWindows((prev) =>
+        prev.map((w) => (w.id === windowId ? { ...w, zIndex: nextZ() } : w))
+      );
+      return;
+    }
+    const offset = (windows.length % 8) * 24;
+    setWindows((prev) => [
+      ...prev,
+      {
+        id: windowId,
+        type: "browser",
+        browserUrl: url,
+        browserLabel: label,
+        zIndex: nextZ(),
+        x: 140 + offset,
+        y: 50 + offset,
+      },
+    ]);
+  }, [windows]);
+
   const closeWindow = useCallback((id: string) => {
     setWindows((prev) => prev.filter((w) => w.id !== id));
   }, []);
@@ -127,7 +154,7 @@ export default function Desktop({ initialIntros }: DesktopProps) {
                 initialX={win.x}
                 initialY={win.y}
               >
-                <IntroView intro={win.intro} />
+                <IntroView intro={win.intro} onOpenLink={openBrowserWindow} />
               </Window>
             );
           }
@@ -143,6 +170,21 @@ export default function Desktop({ initialIntros }: DesktopProps) {
                 initialY={win.y}
               >
                 <IntroForm onSubmit={handleNewIntro} />
+              </Window>
+            );
+          }
+          if (win.type === "browser" && win.browserUrl) {
+            return (
+              <Window
+                key={win.id}
+                title={win.browserLabel || win.browserUrl}
+                zIndex={win.zIndex}
+                onFocus={() => focusWindow(win.id)}
+                onClose={() => closeWindow(win.id)}
+                initialX={win.x}
+                initialY={win.y}
+              >
+                <BrowserWindow url={win.browserUrl} label={win.browserLabel || win.browserUrl} />
               </Window>
             );
           }
