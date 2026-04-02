@@ -97,6 +97,8 @@
     max-height: unset;
     flex: 1;
     padding: 14px;
+    padding-bottom: 24px;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 }
