@@ -1,0 +1,63 @@
+.window {
+  position: absolute;
+  width: 420px;
+  min-height: 200px;
+  background: var(--color-surface);
+  border: 4px solid var(--color-border-light);
+  border-right-color: var(--color-border-dark);
+  border-bottom-color: var(--color-border-dark);
+  box-shadow: 4px 4px 0 var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  image-rendering: pixelated;
+}
+
+.titleBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  cursor: grab;
+  user-select: none;
+}
+
+.titleBar:active {
+  cursor: grabbing;
+}
+
+.titleText {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100% - 30px);
+}
+
+.closeButton {
+  background: none;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.content {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  max-height: 400px;
+}
