@@ -1,0 +1,32 @@
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.option {
+  width: 44px;
+  height: 44px;
+  padding: 4px;
+  border: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.option:hover {
+  border-color: var(--color-border-light);
+}
+
+.selected {
+  border-color: var(--color-text);
+  background: var(--color-surface-light);
+}
+
+.optionImage {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}

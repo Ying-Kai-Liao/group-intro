@@ -1,0 +1,21 @@
+.picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.swatch {
+  width: 28px;
+  height: 28px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.swatch:hover {
+  border-color: var(--color-text);
+}
+
+.selected {
+  border-color: #fff;
+  outline: 2px solid var(--color-border-dark);
+}
