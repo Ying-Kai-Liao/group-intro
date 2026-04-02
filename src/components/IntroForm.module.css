@@ -1,0 +1,122 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--color-text-muted);
+}
+
+.input,
+.textarea {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 2px solid var(--color-border-dark);
+  border-right-color: var(--color-border-light);
+  border-bottom-color: var(--color-border-light);
+  padding: 6px 8px;
+  outline: none;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--accent-sky);
+}
+
+.charCount {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--color-text-muted);
+  text-align: right;
+}
+
+.linkRow {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.linkInput {
+  flex: 1;
+}
+
+.removeLink {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: none;
+  border: none;
+  color: var(--accent-coral);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.addLink {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  background: none;
+  border: 2px solid var(--color-border-light);
+  color: var(--color-text-muted);
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.addLink:hover {
+  color: var(--color-text);
+}
+
+.avatarPreview {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+  border: 2px solid var(--color-border-light);
+}
+
+.submitButton {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  background: var(--color-surface-light);
+  color: var(--color-text);
+  border: 3px solid var(--color-border-light);
+  border-right-color: var(--color-border-dark);
+  border-bottom-color: var(--color-border-dark);
+  padding: 8px 16px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.submitButton:hover {
+  background: var(--color-border-light);
+}
+
+.submitButton:active {
+  border: 3px solid var(--color-border-dark);
+  border-right-color: var(--color-border-light);
+  border-bottom-color: var(--color-border-light);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--accent-coral);
+}
