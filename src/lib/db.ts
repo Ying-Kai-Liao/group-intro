@@ -22,6 +22,18 @@ export async function initDb() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // Migrate: add columns if table was created with old schema
+  try {
+    await db.execute(`ALTER TABLE intros ADD COLUMN email TEXT`);
+  } catch {
+    // column already exists
+  }
+  try {
+    await db.execute(`ALTER TABLE intros ADD COLUMN password_hash TEXT`);
+  } catch {
+    // column already exists
+  }
 }
 
 export function rowToIntro(row: Record<string, unknown>): Intro {
