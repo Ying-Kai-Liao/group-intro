@@ -166,6 +166,30 @@
   color: var(--color-text);
 }
 
+.forgotLink {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  align-self: flex-start;
+}
+
+.forgotLink:hover {
+  color: var(--accent-sky);
+}
+
+.authSuccess {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--accent-mint);
+  line-height: 1.8;
+}
+
 .cancelButton {
   font-family: var(--font-pixel);
   font-size: 8px;

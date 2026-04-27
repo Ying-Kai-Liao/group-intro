@@ -35,13 +35,47 @@ export default function IntroForm({ onSubmit, editIntro, editAuth }: IntroFormPr
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 200 * 1024) {
-      setError("Avatar must be under 200KB");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => setAvatar(reader.result as string);
-    reader.readAsDataURL(file);
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const canvas = document.createElement("canvas");
+      const MAX = 200 * 1024;
+
+      // Start at original dimensions, scale down if needed
+      let width = img.width;
+      let height = img.height;
+
+      // Shrink dimensions iteratively until under 200KB
+      const tryEncode = (w: number, h: number, quality: number): string => {
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d")!;
+        ctx.drawImage(img, 0, 0, w, h);
+        return canvas.toDataURL("image/jpeg", quality);
+      };
+
+      let quality = 0.9;
+      let dataUrl = tryEncode(width, height, quality);
+
+      // Reduce quality first
+      while (dataUrl.length * 0.75 > MAX && quality > 0.2) {
+        quality -= 0.1;
+        dataUrl = tryEncode(width, height, quality);
+      }
+
+      // Then shrink dimensions if still too large
+      while (dataUrl.length * 0.75 > MAX && (width > 100 || height > 100)) {
+        width = Math.floor(width * 0.8);
+        height = Math.floor(height * 0.8);
+        dataUrl = tryEncode(width, height, quality);
+      }
+
+      setAvatar(dataUrl);
+      setError(null);
+    };
+    img.src = objectUrl;
   };
 
   const addLink = () => {

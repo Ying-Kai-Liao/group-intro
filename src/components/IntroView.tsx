@@ -24,12 +24,34 @@ export default function IntroView({ intro, onOpenLink, onDelete, onUpdate }: Int
   const [authLoading, setAuthLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [editAuth, setEditAuth] = useState<{ email: string; password: string } | null>(null);
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSent, setForgotSent] = useState(false);
 
   const handleAuthAction = (action: AuthAction) => {
     setAuthAction(action);
     setAuthEmail("");
     setAuthPassword("");
     setAuthError(null);
+    setForgotMode(false);
+    setForgotSent(false);
+  };
+
+  const handleForgotPassword = async () => {
+    setAuthLoading(true);
+    setAuthError(null);
+    try {
+      await fetch("/api/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: forgotEmail }),
+      });
+      setForgotSent(true);
+    } catch {
+      setAuthError("Network error. Try again.");
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const handleDelete = async () => {
@@ -128,41 +150,85 @@ export default function IntroView({ intro, onOpenLink, onDelete, onUpdate }: Int
 
       {authAction !== null && (
         <div className={styles.authPrompt}>
-          <p className={styles.authPromptLabel}>
-            {authAction === "edit" ? "Authenticate to edit" : "Authenticate to delete"}
-          </p>
-          <input
-            className={styles.authInput}
-            type="email"
-            placeholder="Email"
-            value={authEmail}
-            onChange={(e) => setAuthEmail(e.target.value)}
-            autoComplete="email"
-          />
-          <input
-            className={styles.authInput}
-            type="password"
-            placeholder="Password"
-            value={authPassword}
-            onChange={(e) => setAuthPassword(e.target.value)}
-            autoComplete="current-password"
-          />
-          {authError && <p className={styles.authError}>{authError}</p>}
-          <div className={styles.authButtons}>
-            <button
-              className={styles.authConfirm}
-              disabled={authLoading || !authEmail || !authPassword}
-              onClick={authAction === "delete" ? handleDelete : handleEditAuth}
-            >
-              {authLoading ? "..." : authAction === "delete" ? "Delete" : "Edit"}
-            </button>
-            <button
-              className={styles.authCancel}
-              onClick={() => setAuthAction(null)}
-            >
-              Cancel
-            </button>
-          </div>
+          {!forgotMode ? (
+            <>
+              <p className={styles.authPromptLabel}>
+                {authAction === "edit" ? "Authenticate to edit" : "Authenticate to delete"}
+              </p>
+              <input
+                className={styles.authInput}
+                type="email"
+                placeholder="Email"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                autoComplete="email"
+              />
+              <input
+                className={styles.authInput}
+                type="password"
+                placeholder="Password"
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                autoComplete="current-password"
+              />
+              {authError && <p className={styles.authError}>{authError}</p>}
+              <div className={styles.authButtons}>
+                <button
+                  className={styles.authConfirm}
+                  disabled={authLoading || !authEmail || !authPassword}
+                  onClick={authAction === "delete" ? handleDelete : handleEditAuth}
+                >
+                  {authLoading ? "..." : authAction === "delete" ? "Delete" : "Edit"}
+                </button>
+                <button
+                  className={styles.authCancel}
+                  onClick={() => setAuthAction(null)}
+                >
+                  Cancel
+                </button>
+              </div>
+              <button
+                className={styles.forgotLink}
+                onClick={() => { setForgotMode(true); setForgotEmail(authEmail); setAuthError(null); }}
+              >
+                Forgot password?
+              </button>
+            </>
+          ) : (
+            <>
+              <p className={styles.authPromptLabel}>Reset Password</p>
+              {forgotSent ? (
+                <p className={styles.authSuccess}>Check your email for a reset link!</p>
+              ) : (
+                <>
+                  <input
+                    className={styles.authInput}
+                    type="email"
+                    placeholder="Your email"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    autoComplete="email"
+                  />
+                  {authError && <p className={styles.authError}>{authError}</p>}
+                  <div className={styles.authButtons}>
+                    <button
+                      className={styles.authConfirm}
+                      disabled={authLoading || !forgotEmail}
+                      onClick={handleForgotPassword}
+                    >
+                      {authLoading ? "..." : "Send Reset Email"}
+                    </button>
+                    <button
+                      className={styles.authCancel}
+                      onClick={() => setForgotMode(false)}
+                    >
+                      Back
+                    </button>
+                  </div>
+                </>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>
